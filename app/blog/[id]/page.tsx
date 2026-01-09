@@ -6,33 +6,43 @@ import { useEffect, useState } from "react";
 type Blog = {
   id: number;
   title: string;
+  slug?: string;
   content: string;
-  ratings: number[];      // ✅ FIXED
+  ratings: number[];
   comments: string[];
   createdAt: string;
 };
 
 export default function SingleBlog() {
   const params = useParams();
-  const id = Number(params.id);
+  
+  // ✅ Handle slug or id (params.id is a string)
+  const routeId = Array.isArray(params.id) ? params.id[0] : params.id;
 
   const [blog, setBlog] = useState<Blog | null>(null);
   const [rating, setRating] = useState<number | null>(null);
   const [comment, setComment] = useState("");
 
   useEffect(() => {
+    if (!routeId) return;
+
     const blogs: Blog[] = JSON.parse(localStorage.getItem("blogs") || "[]");
-    const found = blogs.find((b) => b.id === id);
+    
+    // ✅ Find by Slug OR ID
+    const found = blogs.find(
+      (b) => b.slug === routeId || b.id.toString() === routeId
+    );
 
     if (found) {
-      // 🛡 safety: ensure arrays exist
       setBlog({
         ...found,
         ratings: found.ratings || [],
         comments: found.comments || [],
       });
+      // ✅ Set Document Title for SEO
+      document.title = found.title;
     }
-  }, [id]);
+  }, [routeId]);
 
   if (!blog) {
     return (
@@ -49,6 +59,7 @@ export default function SingleBlog() {
     }
 
     const blogs: Blog[] = JSON.parse(localStorage.getItem("blogs") || "[]");
+    // Find index by ID to be safe
     const index = blogs.findIndex((b) => b.id === blog.id);
 
     if (index === -1) return;
@@ -114,22 +125,21 @@ export default function SingleBlog() {
         </div>
 
         {/* FEEDBACK */}
-       <textarea
-  value={comment}
-  onChange={(e) => setComment(e.target.value)}
-  placeholder="Write feedback (optional)"
-  className="
-    w-full mt-4 p-3 rounded
-    bg-[#1b145a]
-    text-white
-    placeholder-gray-300
-    border border-gray-500
-    focus:outline-none
-    focus:ring-2
-    focus:ring-orange-500
-  "
-/>
-
+        <textarea
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="Write feedback (optional)"
+          className="
+            w-full mt-4 p-3 rounded
+            bg-[#1b145a]
+            text-white
+            placeholder-gray-300
+            border border-gray-500
+            focus:outline-none
+            focus:ring-2
+            focus:ring-orange-500
+          "
+        />
 
         <button
           onClick={submitFeedback}

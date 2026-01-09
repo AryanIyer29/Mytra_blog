@@ -21,7 +21,6 @@ export default function CreateBlog() {
   const [title, setTitle] = useState("");
   const [published, setPublished] = useState(false);
 
-
   // 🔐 auth check
   useEffect(() => {
     if (!localStorage.getItem("loggedIn")) {
@@ -53,28 +52,40 @@ export default function CreateBlog() {
     immediatelyRender: false,
   });
 
-// 🚀 publish blog
-const handlePublish = () => {
-  if (!title || !editor?.getText().trim()) {
-    alert("Please enter title and content");
-    return;
-  }
+  // 🚀 publish blog
+  const handlePublish = () => {
+    if (!title || !editor?.getText().trim()) {
+      alert("Please enter title and content");
+      return;
+    }
 
-  const blogs = JSON.parse(localStorage.getItem("blogs") || "[]");
+    const blogs = JSON.parse(localStorage.getItem("blogs") || "[]");
 
-  blogs.push({
-    id: Date.now(),
-    title,
-    content: editor.getHTML(),
-    ratings: [],
-    comments: [],
-    createdAt: new Date().toISOString(),
-  });
+    // 🔗 Create SEO friendly slug
+    const slug = title
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "") // Remove special chars
+      .replace(/[\s_-]+/g, "-") // Replace spaces with -
+      .replace(/^-+|-+$/g, ""); // Trim - from start/end
 
-  localStorage.setItem("blogs", JSON.stringify(blogs));
+    blogs.push({
+      id: Date.now(),
+      title,
+      slug, // ✅ Save slug
+      content: editor.getHTML(),
+      ratings: [],
+      comments: [],
+      createdAt: new Date().toISOString(),
+    });
 
-  setPublished(true);   // 👈 YAHI LINE
-};
+    localStorage.setItem("blogs", JSON.stringify(blogs));
+
+    setPublished(true);
+    
+    // ✅ Redirect to blog list
+    router.push("/blog");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f0b2d] to-[#1b145a] p-6 text-white">

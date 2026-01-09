@@ -1,16 +1,25 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { login } from "@/lib/auth";
+import { useState } from "react";
 
 export default function Login() {
   const router = useRouter();
+  
+  // ✅ FIX: Added state to capture input values
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-  localStorage.setItem("loggedIn", "true");
-  router.push("/blog/create");
-};
+    // ✅ FIX: Added validation to ensure credentials are provided
+    if (!email.trim() || !password.trim()) {
+      alert("Please enter both email and password.");
+      return;
+    }
 
+    localStorage.setItem("loggedIn", "true");
+    router.push("/blog/create");
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -23,6 +32,8 @@ export default function Login() {
         <input
           className="w-full mb-3 p-2 border rounded text-gray-900"
           placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         {/* PASSWORD */}
@@ -30,6 +41,8 @@ export default function Login() {
           type="password"
           className="w-full mb-3 p-2 border rounded text-gray-900"
           placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
 
         {/* LOGIN BUTTON */}
