@@ -6,12 +6,12 @@ import { useState } from "react";
 export default function Login() {
   const router = useRouter();
   
-  // ✅ FIX: Added state to capture input values
+  //  Added state to capture input values
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    // ✅ FIX: Added validation to ensure credentials are provided
+    //  Added validation to ensure credentials are provided
     if (!email.trim() || !password.trim()) {
       alert("Please enter both email and password.");
       return;

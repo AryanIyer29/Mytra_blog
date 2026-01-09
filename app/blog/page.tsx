@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 type Blog = {
   id: number;
   title: string;
-  slug?: string; // ✅ Optional slug
+  slug?: string; 
   content: string;
   ratings: number[];
   comments: string[];
@@ -20,7 +20,7 @@ export default function BlogList() {
   useEffect(() => {
     const storedBlogs: Blog[] = JSON.parse(localStorage.getItem("blogs") || "[]");
     
-    // ✅ Sort by Newest First
+    // Sort by Newest First
     storedBlogs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     
     setBlogs(storedBlogs);

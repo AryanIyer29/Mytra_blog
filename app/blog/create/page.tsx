@@ -83,7 +83,7 @@ export default function CreateBlog() {
 
     setPublished(true);
     
-    // ✅ Redirect to blog list
+    //  Redirect to blog list
     router.push("/blog");
   };
 

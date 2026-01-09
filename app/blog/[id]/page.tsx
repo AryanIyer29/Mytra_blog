@@ -16,7 +16,7 @@ type Blog = {
 export default function SingleBlog() {
   const params = useParams();
   
-  // ✅ Handle slug or id (params.id is a string)
+  // Handle slug or id (params.id is a string)
   const routeId = Array.isArray(params.id) ? params.id[0] : params.id;
 
   const [blog, setBlog] = useState<Blog | null>(null);
@@ -28,7 +28,7 @@ export default function SingleBlog() {
 
     const blogs: Blog[] = JSON.parse(localStorage.getItem("blogs") || "[]");
     
-    // ✅ Find by Slug OR ID
+    //  Find by Slug OR ID
     const found = blogs.find(
       (b) => b.slug === routeId || b.id.toString() === routeId
     );
@@ -39,7 +39,7 @@ export default function SingleBlog() {
         ratings: found.ratings || [],
         comments: found.comments || [],
       });
-      // ✅ Set Document Title for SEO
+      // Set Document Title for SEO
       document.title = found.title;
     }
   }, [routeId]);
